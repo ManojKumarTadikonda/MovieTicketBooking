@@ -1,33 +1,52 @@
-import { Play, Heart } from 'lucide-react';
+import { useState } from 'react';
+import { Play, Heart, X } from 'lucide-react';
+import salaar from '../assests/salaar.jpg';
+import pushpa2 from '../assests/pushpa2.jpeg';
+import kalki from '../assests/Kalki.jpg';
+import DevaraImage from '../assests/Devara.jpeg';
 
 const movies = [
   {
     id: 1,
-    title: 'A Wednesday',
-    duration: '1 Hr 4min',
-    image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=500',
+    title: 'Pushpa 2',
+    duration: '3 Hr 40min',
+    image: pushpa2,
+    trailerUrl: 'https://www.youtube.com/embed/g3JUbgOHgdw',
   },
   {
     id: 2,
-    title: 'Commando-3',
-    duration: '1 Hr 4min',
-    image: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&q=80&w=500',
+    title: 'Salaar',
+    duration: '2 Hr 50min',
+    image: salaar,
+    trailerUrl: 'https://www.youtube.com/embed/4GPvYMKtrtI',
   },
   {
     id: 3,
-    title: 'Gujjubhai Most Wanted',
-    duration: '1 Hr 4min',
-    image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=500',
+    title: 'Kalki',
+    duration: '2 Hr 58min',
+    image: kalki,
+    trailerUrl: 'https://www.youtube.com/embed/y1-w1kUGuz8',
   },
   {
     id: 4,
-    title: 'Avatar',
-    duration: '1 Hr 4min',
-    image: 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?auto=format&fit=crop&q=80&w=500',
+    title: 'Devara',
+    duration: '2 Hr 49min',
+    image: DevaraImage,
+    trailerUrl: 'https://www.youtube.com/embed/5cx7rvMvAWo',
   },
 ];
 
 const PopularMovies = () => {
+  const [selectedTrailer, setSelectedTrailer] = useState<string | null>(null);
+
+  const handleMovieClick = (trailerUrl: string) => {
+    setSelectedTrailer(trailerUrl);
+  };
+
+  const closeTrailer = () => {
+    setSelectedTrailer(null);
+  };
+
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
@@ -37,10 +56,14 @@ const PopularMovies = () => {
             Show all
           </a>
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {movies.map((movie) => (
-            <div key={movie.id} className="relative group">
+            <div
+              key={movie.id}
+              className="relative group cursor-pointer"
+              onClick={() => handleMovieClick(movie.trailerUrl)}
+            >
               <div className="relative overflow-hidden rounded-lg">
                 <img
                   src={movie.image}
@@ -65,6 +88,29 @@ const PopularMovies = () => {
             </div>
           ))}
         </div>
+
+        {selectedTrailer && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="relative bg-white rounded-lg shadow-lg w-[90vw] h-[90vh] overflow-hidden">
+              <button
+                className="absolute top-3 right-3 z-10 p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition-all"
+                onClick={closeTrailer}
+              >
+                <X className="h-6 w-6 text-gray-600" />
+              </button>
+
+              <div className="relative w-full h-full">
+                <iframe
+                  src={selectedTrailer}
+                  title="Trailer"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
