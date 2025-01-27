@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Play, Heart, X } from 'lucide-react';
-import salaar from '../assests/salaar.jpg';
-import pushpa2 from '../assests/pushpa2.jpeg';
-import kalki from '../assests/Kalki.jpg';
-import DevaraImage from '../assests/Devara.jpeg';
+import salaar from '../assets/salaar.jpg';
+import pushpa2 from '../assets/pushpa2.jpeg';
+import kalki from '../assets/Kalki.jpg';
+import DevaraImage from '../assets/Devara.jpeg';
 
 const movies = [
   {
@@ -81,9 +81,14 @@ const PopularMovies = () => {
                   <Heart className="h-6 w-6 text-pink-600" />
                 </button>
               </div>
-              <div className="mt-4">
-                <h3 className="font-semibold text-lg">{movie.title}</h3>
-                <p className="text-gray-600">{movie.duration}</p>
+              <div className="mt-4 flex justify-between items-center">
+                <div>
+                  <h3 className="font-semibold text-lg">{movie.title}</h3>
+                  <p className="text-gray-600">{movie.duration}</p>
+                </div>
+                <button className="bg-pink-600 text-white px-6 py-2 rounded-full text-sm font-semibold transform transition-transform duration-300 group-hover:scale-105 hover:bg-pink-700 focus:outline-none shadow-lg group">
+                  BOOK NOW
+                </button>
               </div>
             </div>
           ))}
