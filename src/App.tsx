@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import MoviesPage from './pages/MoviesPage';
 import BookingPage from './pages/BookingPage';
 
+
 function App() {
   return (
     <Router>
