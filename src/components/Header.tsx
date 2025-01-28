@@ -26,6 +26,8 @@ const Header = () => {
               <Link to="/movies" className="text-gray-600 hover:text-pink-600">Movies</Link>
               <Link to="/about" className="text-gray-600 hover:text-pink-600">About</Link>
               <Link to="/contact" className="text-gray-600 hover:text-pink-600">Contact</Link>
+
+
             </nav>
 
             <div className="flex items-center space-x-4">

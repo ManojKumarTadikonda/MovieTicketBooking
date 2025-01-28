@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link
 
 const slides = [
   {
@@ -67,16 +68,20 @@ const Carousel = () => {
                 <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl">
                   {slide.description}
                 </p>
-                <button className="flex items-center space-x-2 bg-pink-600 text-white px-6 py-3 rounded-full hover:bg-pink-700 transition-colors">
+                {/* Styled Link to match button */}
+                <Link
+                  to="/movies"
+                  className="inline-flex items-center space-x-2 bg-pink-600 text-white px-6 py-3 rounded-full hover:bg-pink-700 transition-colors"
+                >
                   <Play className="h-5 w-5" />
                   <span>{slide.buttonText}</span>
-                </button>
+                </Link>
               </div>
             </div>
           </div>
         ))}
       </div>
-      
+
       <button
         onClick={prevSlide}
         className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors"

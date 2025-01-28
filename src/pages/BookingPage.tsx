@@ -33,17 +33,18 @@ const BookingPage = () => {
   };
 
   const getSeatColor = (seat: string) => {
-    if (selectedSeats.includes(seat)) return "bg-gradient-to-r from-blue-600 to-purple-600 text-white";
+    if (selectedSeats.includes(seat))
+      return "bg-gradient-to-r from-blue-600 to-purple-600 text-white";
     return "bg-gray-200 hover:bg-gradient-to-r hover:from-green-400 hover:to-blue-500 hover:text-white";
   };
 
   const totalAmount = selectedSeats.length * SEAT_PRICE + CONVENIENCE_FEE;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-100 py-12">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-100">
+      <div className="container mx-auto px-4 py-12 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-extrabold text-center mb-12">
+          <h1 className="text-4xl font-extrabold text-center mb-12 overflow-visible">
             Book Your Tickets 🎥
           </h1>
 
@@ -120,14 +121,11 @@ const BookingPage = () => {
                 Select Seats
               </h2>
               <div className="bg-gray-900 p-8 rounded-lg">
-                {/* Screen */}
                 <div className="w-full h-2 bg-gray-600 rounded mb-10 relative">
                   <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-sm">
                     Screen
                   </span>
                 </div>
-
-                {/* Seats */}
                 <div className="grid grid-cols-10 gap-3 max-w-3xl mx-auto">
                   {generateSeats().map((seat) => (
                     <button
@@ -141,8 +139,6 @@ const BookingPage = () => {
                     </button>
                   ))}
                 </div>
-
-                {/* Legend */}
                 <div className="flex justify-center space-x-8 mt-8">
                   <div className="flex items-center">
                     <div className="w-5 h-5 bg-gray-200 rounded mr-2"></div>
@@ -155,7 +151,6 @@ const BookingPage = () => {
                 </div>
               </div>
 
-              {/* Booking Summary */}
               {selectedSeats.length > 0 && (
                 <div className="mt-8 bg-gray-700 p-6 rounded-lg shadow-md">
                   <h3 className="text-lg font-semibold mb-4">
@@ -181,9 +176,7 @@ const BookingPage = () => {
                       </div>
                     </div>
                   </div>
-                  <button
-                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 rounded-lg mt-6 hover:opacity-90 transition-opacity"
-                  >
+                  <button className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 rounded-lg mt-6 hover:opacity-90 transition-opacity">
                     Proceed to Payment
                   </button>
                 </div>

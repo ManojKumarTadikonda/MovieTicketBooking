@@ -1,38 +1,42 @@
 import { useState } from 'react';
 import { Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import TrailerModal from './TrailerModal';
+import Pushpa2 from '../assets/Pushpatr2.jpeg';
+import Salaar from '../assets/salaar.jpg';
+import Kalki from '../assets/Kalki.jpg';
+import DevaraImage from '../assets/Devara.jpeg';
 
 const trailers = [
   {
     id: 1,
-    title: 'Inception',
-    thumbnail: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&q=80&w=1600',
-    videoUrl: 'https://www.youtube.com/embed/YoHD9XEInc0',
-    duration: '2:32',
+    title: 'Pushpa 2',
+    thumbnail: Pushpa2,
+    videoUrl: 'https://www.youtube.com/embed/g3JUbgOHgdw',
+    duration: '3 Hr 40min',
     releaseDate: 'Jan 24, 2024',
   },
   {
     id: 2,
-    title: 'The Dark Knight',
-    thumbnail: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&q=80&w=1600',
-    videoUrl: 'https://www.youtube.com/embed/EXeTwQWrcwY',
-    duration: '2:15',
+    title: 'Salaar',
+    thumbnail: Salaar,
+    videoUrl: 'https://www.youtube.com/embed/4GPvYMKtrtI',
+    duration: '2 Hr 50min',
     releaseDate: 'Feb 15, 2024',
   },
   {
     id: 3,
-    title: 'Interstellar',
-    thumbnail: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=1600',
-    videoUrl: 'https://www.youtube.com/embed/zSWdZVtXT7E',
-    duration: '2:45',
+    title: 'Kalki',
+    thumbnail: Kalki,
+    videoUrl: 'https://www.youtube.com/embed/y1-w1kUGuz8',
+    duration: '2 Hr 58min',
     releaseDate: 'Mar 1, 2024',
   },
   {
     id: 4,
-    title: 'Avatar',
-    thumbnail: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?auto=format&fit=crop&q=80&w=1600',
-    videoUrl: 'https://www.youtube.com/embed/5PSNL1qE6VY',
-    duration: '2:20',
+    title: 'Devara',
+    thumbnail: DevaraImage,
+    videoUrl: 'https://www.youtube.com/embed/5cx7rvMvAWo',
+    duration: '2 Hr 49min',
     releaseDate: 'Mar 15, 2024',
   },
 ];
