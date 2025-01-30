@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Movies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+
+            background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkOq92MHWOshlvWoMX_gXR0w2gl3kkKl-lqA&s");
+            height:100%;
+        }
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: rgba(0, 0, 0, 0.6); 
+            color:white;
+            animation: fadeIn 2s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .hero h1 {
+            font-size: 50px;
+            font-weight: 600;
+            margin: 0;
+        }
+        .hero p {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        .about, .testimonial {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(26, 26, 26, 0.9);
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .about:hover, .testimonial:hover {
+            transform: scale(1.05);
+        }
+        .about h2, .testimonial h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #ff8c00;
+        }
+        .about p, .testimonial p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        .testimonial p::after {
+            content: " 🎬 🍿 ";
+        }
+        .cta {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta button {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .cta button:hover {
+            background: #e63946;
+            transform: scale(1.1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(34, 34, 34, 0.9);
+            font-size: 14px;
+            color: #bbb;
+        }
+        .logo {
+            display: block;
+            margin: 20px auto;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+
+        <h1>About Movies 🎥</h1>
+        <p>Discover the magic of cinema, from timeless classics to modern masterpieces.</p>
+    </div>
+    <div class="about">
+        <h2>Our Love for Cinema ❤️</h2>
+        <p>Movies have always been a powerful medium for storytelling, bringing emotions, adventures, and culture to life on the big screen. From the silent era to high-tech CGI, the industry continues to evolve, pushing the boundaries of creativity and imagination.</p>
+        <h2>The Art of Filmmaking 🎬</h2>
+        <p>Behind every great movie is a team of talented writers, directors, actors, and crew members who work together to craft unforgettable experiences. Genres such as drama, action, sci-fi, and documentaries allow for a diverse range of storytelling techniques.</p>
+    </div>
+    <div class="testimonial">
+        <h3>What Our Viewers Say 😊</h3>
+        <p>"Movies bring stories to life like no other medium. I love how they transport us to different worlds!" – Alex P.</p>
+    </div>
+    <div class="cta">
+        <button>🎥 Explore More 🍿</button>
+    </div>
+    <div class="footer">
+        <p>&copy; 2025 Movie Hub. All Rights Reserved. 🎬</p>
+    </div>
+</body>
+</html>
