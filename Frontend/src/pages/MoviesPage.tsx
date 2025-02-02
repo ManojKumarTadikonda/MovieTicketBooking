@@ -5,7 +5,7 @@ import pushpa2 from '../assets/pushpa2.jpeg';
 import salaar from '../assets/salaar.jpg';
 import kalki from '../assets/Kalki.jpg';
 import DevaraImage from '../assets/Devara.jpeg';
-
+//SD
 const movies = [
   {
     id: 1,
