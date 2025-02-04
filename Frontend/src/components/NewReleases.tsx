@@ -1,5 +1,6 @@
 import { Play, Heart } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // Importing local images
 import OGImage from '../assets/Og.jpeg';
@@ -18,7 +19,8 @@ const movies = [
     image: OGImage,
     likes: Math.floor(Math.random() * (100000 - 5000) + 5000),
   },
-  { id: 2,
+  {
+    id: 2,
     title: 'Devara 2',
     duration: '2 Hr 40min',
     description: 'The epic sequel to the blockbuster Devara.',
@@ -26,7 +28,8 @@ const movies = [
     image: DevaraImage,
     likes: Math.floor(Math.random() * (100000 - 5000) + 5000),
   },
-  { id: 3,
+  {
+    id: 3,
     title: 'Akhanda 2',
     duration: '2 Hr 20min',
     description: 'The roaring return of Balayya in Akhanda 2.',
@@ -101,9 +104,9 @@ const NewReleases = () => {
                 />
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <button className="bg-pink-500 p-3 rounded-full hover:bg-pink-600 transition-transform transform hover:scale-110">
-                      <Play className="h-8 w-8 text-white" />
-                    </button>
+                    <Link to={`/booking/${movie.id}`} className="bg-white p-3 rounded-full hover:bg-gray-100 transition-transform transform hover:scale-110">
+                      <Play className="h-8 w-8 text-pink-600" />
+                    </Link>
                   </div>
                 </div>
                 <button onClick={() => handleLike(index)} className="absolute top-4 right-4 p-2 hover:scale-110 transition-transform">

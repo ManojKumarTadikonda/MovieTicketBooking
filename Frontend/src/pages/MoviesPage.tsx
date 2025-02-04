@@ -15,7 +15,7 @@ const movies = [
     description: 'The continuation of Pushpa Raj\'s journey in the dangerous world of red sandalwood smuggling.',
     rating: 4.8,
     reviews: [
-      { id: 1, user: 'Ram C.', rating: 5, comment: 'Mind-blowing action and Allu Arjun\'s top performance!' },
+      { id: 1, user: 'Ram C.', rating: 5, comment: 'Mind-blowing action , Allu Arjun\'s Mass!' },
       { id: 2, user: 'Sita G.', rating: 4.5, comment: 'The visuals and dialogues are unforgettable!' }
     ],
   },
