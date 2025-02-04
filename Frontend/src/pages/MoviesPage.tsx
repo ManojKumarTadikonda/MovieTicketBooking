@@ -1,70 +1,18 @@
 import { useState } from 'react';
 import MovieCard from '../components/MovieCard';
 import Trailers from '../components/Trailers';
-import pushpa2 from '../assets/pushpa2.jpeg';
-import salaar from '../assets/salaar.jpg';
-import kalki from '../assets/Kalki.jpg';
-import DevaraImage from '../assets/Devara.jpeg';
-//SD
-const movies = [
-  {
-    id: 1,
-    title: 'Pushpa 2',
-    duration: '3 Hr 40min',
-    image: pushpa2,
-    description: 'The continuation of Pushpa Raj\'s journey in the dangerous world of red sandalwood smuggling.',
-    rating: 4.8,
-    reviews: [
-      { id: 1, user: 'Ram C.', rating: 5, comment: 'Mind-blowing action and Allu Arjun\'s top performance!' },
-      { id: 2, user: 'Sita G.', rating: 4.5, comment: 'The visuals and dialogues are unforgettable!' }
-    ],
-  },
-  {
-    id: 2,
-    title: 'Salaar',
-    duration: '2 Hr 50min',
-    image: salaar,
-    description: 'Prabhas takes on the role of a mysterious rebel in this high-octane action movie.',
-    rating: 4.9,
-    reviews: [
-      { id: 1, user: 'Arjun D.', rating: 5, comment: 'A visual treat with amazing stunts!' },
-      { id: 2, user: 'Kriti J.', rating: 4.8, comment: 'Prabhas nailed it yet again in this blockbuster!' }
-    ],
-  },
-  {
-    id: 3,
-    title: 'Kalki',
-    duration: '2 Hr 58min',
-    image: kalki,
-    description: 'An epic drama showcasing the story of Kalki, a modern-day warrior with a gripping backstory.',
-    rating: 4.7,
-    reviews: [
-      { id: 1, user: 'Lakshmi S.', rating: 4.5, comment: 'A mesmerizing movie with stunning storytelling.' },
-      { id: 2, user: 'Raj V.', rating: 5, comment: 'Perfect mix of action and drama!' }
-    ],
-  },
-  {
-    id: 4,
-    title: 'Devara',
-    duration: '2 Hr 49min',
-    image: DevaraImage,
-    description: 'An emotional journey of revenge, redemption, and resilience.',
-    rating: 4.6,
-    reviews: [
-      { id: 1, user: 'Arya P.', rating: 4.5, comment: 'Heartfelt and powerful story with Jr. NTR at his best!' },
-      { id: 2, user: 'Mira D.', rating: 4.8, comment: 'Outstanding performance and gripping plot.' }
-    ],
-  },
-];
+import moviesData from './movies.json';
 
 const MoviesPage = () => {
   const [filter, setFilter] = useState('all');
+  const [movies, setMovies] = useState(moviesData);
 
   const viewscreen1 = () => {
     window.open('/screen1', '_blank');
   };
+
   const viewscreen2 = () => {
-    window.open('http://127.0.0.1:8080/Movie_Threater.html', '_blank'); // Opens the link in a new tab
+    window.open('http://127.0.0.1:8080/Movie_Threater.html', '_blank');
   };
 
   return (
@@ -96,7 +44,14 @@ const MoviesPage = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} showReviews={true} />
+            <MovieCard
+              key={movie.id}
+              movie={{
+                ...movie,
+                image: movie.image // Directly use the path from the JSON file
+              }}
+              showReviews={true}
+            />
           ))}
         </div>
       </div>

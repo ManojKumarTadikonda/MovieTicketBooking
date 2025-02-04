@@ -10,7 +10,7 @@ interface Review {
 
 interface MovieCardProps {
   movie: {
-    id: number;
+    id: string;
     title: string;
     duration: string;
     image: string;
