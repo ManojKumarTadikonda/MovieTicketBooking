@@ -2,7 +2,7 @@ import { useState } from 'react';
 import MovieCard from '../components/MovieCard';
 import Trailers from '../components/Trailers';
 import moviesData from './movies.json';
-
+//SD
 const MoviesPage = () => {
   const [filter, setFilter] = useState('all');
   const [movies, setMovies] = useState(moviesData);

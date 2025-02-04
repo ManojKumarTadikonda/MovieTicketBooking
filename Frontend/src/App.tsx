@@ -10,7 +10,6 @@ import BookingPage from './pages/BookingPage';
 import ModelViewer from './components/ModelViewer';
 import moviesData from './pages/movies.json'; // Assuming you have movies.json in the same folder
 import { useEffect, useState } from 'react';
-
 function App() {
   return (
     <Router>
