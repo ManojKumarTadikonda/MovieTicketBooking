@@ -1,47 +1,71 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { Calendar, Clock } from "lucide-react";
-
-const showtimes = [
-  { id: 1, time: "10:30 AM", screen: "MGB MALL NELLORE" },
-  { id: 2, time: "1:30 PM", screen: "MGB MALL NELLORE" },
-  { id: 3, time: "4:45 PM", screen: "MGB MALL NELLORE" },
-  { id: 4, time: "8:00 PM", screen: "MGB MALL NELLORE" },
-  { id: 5, time: "10:15 AM", screen: "Rain Square theatre" },
-  { id: 6, time: "1:45 PM", screen: "Rain Square theatre" },
-  { id: 7, time: "5:00 PM", screen: "Rain Square theatre" },
-  { id: 8, time: "8:15 PM", screen: "Rain Square theatre" },
-];
-
+import { useNavigate } from "react-router-dom";
 const SEAT_PRICE = 200;
 const CONVENIENCE_FEE = 30;
 
-const BookingPage = ({ movieId, movieName, userId }: { movieId: string, movieName: string, userId: string }) => {
+const BookingPage = ({
+  movieName,
+  movieId,
+  userID,
+}: {
+  movieName: string;
+  movieId: string;
+  userID: string;
+}) => {
   const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedTime, setSelectedTime] = useState<number | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
-  const [movieTitle, setMovieTitle] = useState<string>(""); // New state for movie title
+  const [showtimes, setShowtimes] = useState<any[]>([]);
+  const [filteredShowtimes, setFilteredShowtimes] = useState<any[]>([]);
+  const [availableDates, setAvailableDates] = useState<string[]>([]);
+  const [selectedScreen, setSelectedScreen] = useState<number | null>(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to the top of the page when the component mounts
-  }, []);
+    window.scrollTo(0, 0);
+    const fetchSchedule = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/schedules`);
+        const data = await response.json();
+        setShowtimes(data);
+        const dates: string[] = Array.from(
+          new Set(
+            data
+              .filter(
+                (showtime: { movieName: string }) =>
+                  showtime.movieName === movieName
+              )
+              .map((showtime: { date: any }) => showtime.date)
+          )
+        );
+        setAvailableDates(dates);
+      } catch (error) {
+        console.error("Error fetching schedule:", error);
+      }
+    };
 
-  const generateSeatsMGB = () => {
-    const rows = ["A", "B", "C", "D", "E", "F","G"]; // 6 rows for MGB MALL NELLORE
-    const seatsPerRow = 10; // 10 seats per row
-    return rows.flatMap((row) =>
-      Array.from({ length: seatsPerRow }, (_, i) => `${row}${i + 1}`)
+    fetchSchedule();
+  }, [movieId, movieName]);
+
+  const handleDateClick = (date: string) => {
+    setSelectedDate(date);
+    const filtered = showtimes.filter(
+      (showtime) => showtime.movieName === movieName && showtime.date === date
     );
+    setFilteredShowtimes(filtered);
   };
 
-  const generateSeatsRainSquare = () => {
-    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"]; // 8 rows for Rain Square theatre
-    const seatsPerRow = 12; // increased seats per row from 10 to 12
-    return rows.flatMap((row) =>
-      Array.from({ length: seatsPerRow }, (_, i) => `${row}${i + 1}`)
+  const handleScreenClick = (screen: number) => {
+    setSelectedScreen(screen); // Set selected screen here
+    const selectedScreenShowtimes = showtimes.filter(
+      (showtime) =>
+        showtime.screen === screen &&
+        showtime.movieName === movieName &&
+        showtime.date === selectedDate
     );
+    setFilteredShowtimes(selectedScreenShowtimes);
+    setSelectedTime(null); // Reset time selection when switching screens
   };
-  
 
   const handleSeatClick = (seat: string) => {
     setSelectedSeats((prev) =>
@@ -55,30 +79,38 @@ const BookingPage = ({ movieId, movieName, userId }: { movieId: string, movieNam
     return "bg-gray-300 hover:bg-gradient-to-r hover:from-green-400 hover:to-blue-500 hover:text-white";
   };
 
-  const totalAmount = selectedSeats.length * SEAT_PRICE + CONVENIENCE_FEE;
-
-  const submitBooking = async () => {
-    if (!selectedDate || !selectedTime || selectedSeats.length === 0) {
-      alert("Please complete the booking details.");
-      return;
-    }
-
-    const selectedShowtime = showtimes.find(
-      (showtime) => showtime.id === selectedTime
+  const generateSeatsMGB = () => {
+    const rows = ["G", "F", "E", "D", "C", "B", "A"];
+    const seatsPerRow = 12;
+    return rows.map((row) =>
+      Array.from({ length: seatsPerRow }, (_, i) => `${row}${i + 1}`)
     );
+  };
 
-    if (!selectedShowtime) {
-      alert("Invalid showtime selected.");
-      return;
-    }
+  const generateSeatsRainSquare = () => {
+    const rows = ["K", "J", "I", "H", "G", "F", "E", "D", "C", "B", "A"];
+    const seatsPerRow = 20;
+    return rows.map((row) =>
+      Array.from({ length: seatsPerRow }, (_, i) => `${row}${i + 1}`)
+    );
+  };
 
+  const calculateTotal = () => {
+    return selectedSeats.length * SEAT_PRICE + CONVENIENCE_FEE;
+  };
+  const navigate = useNavigate();
+  // Retrieve the email from localStorage
+  const email = localStorage.getItem("email");
+  console.log(email);
+  const handleBooking = async () => {
     const bookingData = {
-      userId,
+      userId:userID,
+      email: email||"n210519@rguktn.ac.in", // Replace with dynamic email
       movieId,
       movieName,
       selectedDate,
-      showTime: selectedShowtime.time,
-      screenName: selectedShowtime.screen,
+      showTime: selectedTime,
+      screenName: selectedScreen,
       seatPosition: selectedSeats.join(", "),
       amount: selectedSeats.length * SEAT_PRICE,
       payment: "done", // You can change this based on the payment process
@@ -92,10 +124,11 @@ const BookingPage = ({ movieId, movieName, userId }: { movieId: string, movieNam
         },
         body: JSON.stringify(bookingData),
       });
-
+      console.log(bookingData);
       if (response.ok) {
         const data = await response.json();
         alert("Booking successful!");
+        navigate("/");
         // Optionally redirect to another page after successful booking
         console.log(data);
       } else {
@@ -108,185 +141,246 @@ const BookingPage = ({ movieId, movieName, userId }: { movieId: string, movieNam
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-100">
-      <div className="container mx-auto px-4 py-12 overflow-y-auto mt-16">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-extrabold text-center mb-6">
-            Book Your Tickets 🎥
-          </h1>
+    <div className="min-h-screen bg-white text-gray-800 pt-10">
+      <div className="container mx-auto px-4 py-8 overflow-y-auto mt-10">
+        <h1 className="text-3xl font-extrabold text-pink-500 text-center mb-4">
+          Book Your Tickets 🎥
+        </h1>
 
         {/* Date Selection */}
-        <section
-          aria-labelledby="date-selection"
-          className="mb-8 bg-gray-200 p-4 rounded-lg shadow-md"
-        >
-          <h2 id="date-selection" className="text-xl font-bold text-black mb-4 animate-bounce">
+        <section className="mb-8 bg-gray-200 p-4 rounded-lg shadow-md">
+          <h2 className="text-xl font-bold text-black mb-4 animate-bounce">
             Select Date
           </h2>
           <div className="flex space-x-2 overflow-x-auto pb-2">
-            {[...Array(7)].map((_, index) => {
-              const date = new Date();
-              date.setDate(date.getDate() + index);
-              const dateStr = date.toISOString().split("T")[0];
-              return (
-                <button
-                  key={dateStr}
-                  onClick={() => setSelectedDate(dateStr)}
-                  className={`flex flex-col items-center p-2 rounded-lg min-w-[80px] transition-all duration-300 ${
-                    selectedDate === dateStr
-                      ? "bg-gradient-to-br from-blue-600 to-purple-600 text-white"
-                      : "bg-gray-300 hover:bg-gray-200"
-                  }`}
-                >
-                  <Calendar className="h-5 w-5 mb-1" />
-                  <span className="text-xs">
-                    {date.toLocaleDateString("en-US", { weekday: "short" })}
-                  </span>
-                  <span className="text-lg font-bold">{date.getDate()}</span>
-                </button>
-              );
-            })}
+            {availableDates.map((date) => (
+              <button
+                key={date}
+                onClick={() => handleDateClick(date)}
+                className={`flex flex-col items-center p-2 rounded-lg min-w-[80px] transition-all duration-300 ${
+                  selectedDate === date
+                    ? "bg-gradient-to-br from-blue-600 to-purple-600 text-white"
+                    : "bg-gray-300 hover:bg-gray-200"
+                }`}
+              >
+                <Calendar className="h-5 w-5 mb-1" />
+                <span className="text-xs">
+                  {new Date(date).toLocaleDateString("en-US", {
+                    weekday: "short",
+                  })}
+                </span>
+                <span className="text-lg font-bold">
+                  {new Date(date).getDate()}
+                </span>
+              </button>
+            ))}
           </div>
         </section>
 
-          {/* Time Selection */}
-          {selectedDate && (
-            <section
-              aria-labelledby="time-selection"
-              className="mb-10 bg-gray-800 p-6 rounded-lg shadow-md"
-            >
-              <h2 id="time-selection" className="text-2xl font-semibold mb-6">
-                Select Showtime
-              </h2>
-              <div className="flex flex-col gap-6">
-                <div>
-                  <h3 className="text-xl font-semibold mb-4">MGB MALL NELLORE</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                    {showtimes.filter(showtime => showtime.screen === "MGB MALL NELLORE").map((showtime) => (
-                      <button
-                        key={showtime.id}
-                        onClick={() => setSelectedTime(showtime.id)}
-                        className={`flex flex-col items-center p-6 rounded-lg shadow-lg transition-all duration-300 ${
-                          selectedTime === showtime.id
-                            ? "bg-gradient-to-br from-green-600 to-blue-600 text-white"
-                            : "bg-gray-700 hover:bg-gray-600"
-                        }`}
-                      >
-                        <Clock className="h-6 w-6 mb-2" />
-                        <span className="text-lg font-bold">{showtime.time}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-4">Rain Square theatre</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                    {showtimes.filter(showtime => showtime.screen === "Rain Square theatre").map((showtime) => (
-                      <button
-                        key={showtime.id}
-                        onClick={() => setSelectedTime(showtime.id)}
-                        className={`flex flex-col items-center p-6 rounded-lg shadow-lg transition-all duration-300 ${
-                          selectedTime === showtime.id
-                            ? "bg-gradient-to-br from-green-600 to-blue-600 text-white"
-                            : "bg-gray-700 hover:bg-gray-600"
-                        }`}
-                      >
-                        <Clock className="h-6 w-6 mb-2" />
-                        <span className="text-lg font-bold">{showtime.time}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
+        {/* Screen Selection */}
+        {selectedDate && filteredShowtimes.length > 0 && (
+          <section className="mb-8 bg-gray-200 p-4 rounded-lg shadow-md">
+            <h2 className="text-xl font-bold text-black mb-4">Select Screen</h2>
+            <div className="flex space-x-4">
+              {[1, 2].map((screen) => (
+                <button
+                  key={screen}
+                  onClick={() => handleScreenClick(screen)}
+                  className={`flex flex-col items-center p-4 rounded-lg transition-all duration-300 ${
+                    filteredShowtimes.some(
+                      (showtime) => showtime.screen === screen
+                    )
+                      ? "bg-gradient-to-br from-green-600 to-blue-600 text-white"
+                      : "bg-gray-300"
+                  }`}
+                  disabled={
+                    !filteredShowtimes.some(
+                      (showtime) => showtime.screen === screen
+                    )
+                  }
+                >
+                  <span className="text-lg font-bold">{`Screen ${screen}`}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
 
-          {/* Seat Selection */}
-          {selectedTime && (
-            <section
-              aria-labelledby="seat-selection"
-              className="mb-10 bg-gray-800 p-6 rounded-lg shadow-md"
-            >
-              <h2 id="seat-selection" className="text-2xl font-semibold mb-6">
-                Select Seats
-              </h2>
-              <div className="bg-gray-900 p-8 rounded-lg">
-                <div className="w-full h-2 bg-gray-600 rounded mb-10 relative">
-                  <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-sm">
-                    Screen
-                  </span>
-                </div>
-                <div className="grid grid-cols-10 gap-3 max-w-3xl mx-auto">
-                  {selectedTime && showtimes.find(showtime => showtime.id === selectedTime)?.screen === "MGB MALL NELLORE" ? generateSeatsMGB().map((seat) => (
+        {/* Showtime Selection */}
+        {selectedDate && filteredShowtimes.length > 0 && (
+          <section className="mb-8 bg-gray-200 p-4 rounded-lg shadow-md">
+            <h2 className="text-xl font-bold text-black mb-4">
+              Select Showtime
+            </h2>
+            <div className="flex flex-col gap-4">
+              {filteredShowtimes.map((showtime) => (
+                <div key={showtime.showTime}>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <button
-                      key={seat}
-                      onClick={() => handleSeatClick(seat)}
-                      className={`w-10 h-10 rounded-md flex items-center justify-center text-sm font-medium transition-all duration-300 ${getSeatColor(
-                        seat
-                      )}`}
+                      onClick={() => setSelectedTime(showtime.showTime)}
+                      className={`flex flex-col items-center p-4 rounded-lg shadow-lg transition-all duration-300 ${
+                        selectedTime === showtime.showTime
+                          ? "bg-gradient-to-br from-green-600 to-blue-600 text-white"
+                          : "bg-gray-300 hover:bg-gray-200"
+                      }`}
                     >
-                      {seat}
+                      <Clock className="h-5 w-5 mb-1" />
+                      <span className="text-sm font-bold">
+                        {showtime.showTime}
+                      </span>
                     </button>
-                  )) : generateSeatsRainSquare().map((seat) => (
-                    <button
-                      key={seat}
-                      onClick={() => handleSeatClick(seat)}
-                      className={`w-10 h-10 rounded-md flex items-center justify-center text-sm font-medium transition-all duration-300 ${getSeatColor(
-                        seat
-                      )}`}
-                    >
-                      {seat}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex justify-center space-x-8 mt-8">
-                  <div className="flex items-center">
-                    <div className="w-5 h-5 bg-gray-200 rounded mr-2"></div>
-                    <span className="text-sm">Available</span>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="w-5 h-5 bg-gradient-to-r from-blue-600 to-purple-600 rounded mr-2"></div>
-                    <span className="text-sm">Selected</span>
                   </div>
                 </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Seat Selection */}
+        {selectedTime && (
+          <section className="mb-10 bg-gray-200 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold text-black mb-6 animate-bounce">
+              Select Seats
+            </h2>
+            <div className="bg-gray-300 p-8 rounded-lg">
+              <div className="w-full h-4 bg-gray-600 rounded mb-10 relative flex items-center justify-center">
+                <span className="text-white font-bold text-lg">SCREEN</span>
               </div>
 
-              {selectedSeats.length > 0 && (
-                <div className="mt-8 bg-gray-700 p-6 rounded-lg shadow-md">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Booking Summary
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span>Selected Seats:</span>
-                      <span>{selectedSeats.join(", ")}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Tickets:</span>
-                      <span>{selectedSeats.length} x ₹{SEAT_PRICE}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Convenience Fee:</span>
-                      <span>₹{CONVENIENCE_FEE}</span>
-                    </div>
-                    <div className="border-t pt-2 mt-2">
-                      <div className="flex justify-between font-semibold">
-                        <span>Total Amount:</span>
-                        <span>₹{totalAmount}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <button className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 rounded-lg mt-6 hover:opacity-90 transition-opacity">
-                    Proceed to Payment
-                  </button>
-                </div>
-              )}
-            </section>
-          )}
+              <div className="max-w-3xl mx-auto space-y-4">
+                {(() => {
+                  const selectedShowtime = filteredShowtimes.find(
+                    (showtime) => showtime.showTime === selectedTime
+                  );
+                  const isRainSquare = selectedShowtime?.screen === 2;
+
+                  return isRainSquare
+                    ? generateSeatsRainSquare().map((row, rowIndex) => (
+                        <div
+                          key={rowIndex}
+                          className="flex justify-center gap-4"
+                        >
+                          <div className="flex gap-3">
+                            {row.slice(0, 8).map((seat) => (
+                              <button
+                                key={seat}
+                                onClick={() => handleSeatClick(seat)}
+                                className={`w-10 h-10 rounded-md flex items-center justify-center text-sm font-medium transition-all duration-300 ${getSeatColor(
+                                  seat
+                                )}`}
+                              >
+                                {seat}
+                              </button>
+                            ))}
+                          </div>
+                          <div className="w-32" />
+                          <div className="flex gap-3">
+                            {row.slice(8).map((seat) => (
+                              <button
+                                key={seat}
+                                onClick={() => handleSeatClick(seat)}
+                                className={`w-10 h-10 rounded-md flex items-center justify-center text-sm font-medium transition-all duration-300 ${getSeatColor(
+                                  seat
+                                )}`}
+                              >
+                                {seat}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    : generateSeatsMGB().map((row, rowIndex) => (
+                        <div
+                          key={rowIndex}
+                          className="flex justify-center gap-4"
+                        >
+                          <div className="flex gap-3">
+                            {row.slice(0, 6).map((seat) => (
+                              <button
+                                key={seat}
+                                onClick={() => handleSeatClick(seat)}
+                                className={`w-10 h-10 rounded-md flex items-center justify-center text-sm font-medium transition-all duration-300 ${getSeatColor(
+                                  seat
+                                )}`}
+                              >
+                                {seat}
+                              </button>
+                            ))}
+                          </div>
+                          <div className="w-16" />
+                          <div className="flex gap-3">
+                            {row.slice(6).map((seat) => (
+                              <button
+                                key={seat}
+                                onClick={() => handleSeatClick(seat)}
+                                className={`w-10 h-10 rounded-md flex items-center justify-center text-sm font-medium transition-all duration-300 ${getSeatColor(
+                                  seat
+                                )}`}
+                              >
+                                {seat}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ));
+                })()}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Booking Summary */}
+        {/* Booking Summary */}
+        <div className="border-t border-gray-300 pt-4 mt-4 bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-2 text-gray-800">
+            Booking Summary:
+          </h2>
+          <p className="text-lg text-gray-700 mb-2">
+            <strong>Date:</strong> {selectedDate || "Not selected"}
+          </p>
+          <p className="text-lg text-gray-700 mb-2">
+            <strong>Screen:</strong> {selectedScreen || "Not selected"}
+          </p>
+          <p className="text-lg text-gray-700 mb-2">
+            <strong>Showtime:</strong> {selectedTime || "Not selected"}
+          </p>
+          <p className="text-lg text-gray-700 mb-2">
+            <strong>Seats:</strong>{" "}
+            {selectedSeats.length > 0
+              ? selectedSeats.join(", ")
+              : "Not selected"}
+          </p>
+          <div className="flex items-center justify-between mt-4">
+            <p className="text-lg font-medium text-gray-800">
+              <strong>Ticket Price:</strong> ₹{SEAT_PRICE} x{" "}
+              {selectedSeats.length}
+            </p>
+            <p className="text-lg font-medium text-gray-800">
+              <strong>Convenience Fee:</strong> ₹{CONVENIENCE_FEE}
+            </p>
+          </div>
+          <p className="text-lg font-bold text-gray-800 mt-4 mb-2">
+            Total: ₹{calculateTotal()}
+          </p>
         </div>
+
+        <button
+          className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 hover:bg-indigo-700 disabled:bg-gray-400"
+          disabled={
+            !selectedDate ||
+            !selectedScreen ||
+            !selectedTime ||
+            selectedSeats.length === 0
+          }
+          onClick={handleBooking}
+        >
+          Confirm Booking
+        </button>
       </div>
     </div>
   );
 };
 
 export default BookingPage;
+
+
