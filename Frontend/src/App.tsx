@@ -56,7 +56,7 @@ const BookingPageWrapper = () => {
     <BookingPage
       movieId={movie.id}
       movieName={movie.title} // Pass movie title as movieName prop
-      userId={userId} // You can handle userId logic as needed
+      userID={userId} // You can handle userId logic as needed
     />
   );
 };
