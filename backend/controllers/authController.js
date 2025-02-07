@@ -28,7 +28,7 @@ exports.signup = async (req, res) => {
     // Send OTP to email
     await sendOtpEmail(email, otp);
 
-    res.status(201).json({ message: "User registered. Check your email for OTP." });
+    res.status(201).json({ message: "User registered. Check your email for OTP." ,email:email});
 
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });
@@ -79,7 +79,7 @@ exports.login = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.status(200).json({username:username,_id:_id, message: "Login successful", token });
+    res.status(200).json({username:username,_id:_id,email:user.email, message: "Login successful", token });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });
   }
